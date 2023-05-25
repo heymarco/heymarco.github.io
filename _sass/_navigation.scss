@@ -207,10 +207,10 @@
     li {
       display: table-cell;
       vertical-align: middle;
+      font-weight: 300;
 
       &:first-child {
-        font-weight: bold;
-
+        font-size: larger;
         a {
           margin-left: 0;
         }

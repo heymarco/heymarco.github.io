@@ -23,9 +23,9 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 2em 0 0.5em;
-  line-height: 1.2;
+  line-height: 1.4;
   font-family: $header-font-family;
-  font-weight: bold;
+  font-weight: 300;
 }
 
 h1 {
@@ -58,7 +58,7 @@ small, .small {
 }
 
 p {
-  margin-bottom: 1.3em;
+  //margin-bottom: 1.3em;
 }
 
 u,
@@ -112,13 +112,24 @@ blockquote {
 /* links */
 
 a {
+  color: $link-color;
+  text-decoration: none;
   &:focus {
     @extend %tab-focus;
   }
 
   &:hover,
   &:active {
+    color: $taupe;
     outline: 0;
+  }
+}
+
+body p a {
+  color: $taupe;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
