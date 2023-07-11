@@ -1,8 +1,7 @@
 ---
-layout: single
 title:  "Parallelizing scientific experiments"
-#header:
-#  teaser: "unsplash-gallery-image-2-th.jpg"
+permalink: /posts/2023/07/parallelization/
+date: 2023-07-11
 categories: 
   - python
 tags:
