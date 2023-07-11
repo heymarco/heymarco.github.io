@@ -16,7 +16,7 @@ In a nutshell, evaluating machine learning algorithms typically requires
 1. comparing ones own algorithm to the state of the art.
 2. repeating an experiment multiple times to obtain reliable results.
 
-The most inefficient way to do this is to loop over all algorithms, data sets, and experiment repetitions or folds. A more efficient method is to parallelize one of the loops. However, this still leaves us with a substantial amount of sequential processing. The most efficient solution lies in eliminating these loops entirely and allowing the system to concurrently execute all algorithm-dataset-fold combinations in parallel.
+The most inefficient way to do this is to loop over all algorithms, data sets, and experiment repetitions or folds. A more efficient method is to parallelize one of the loops. However, this still leaves us with a substantial amount of sequential processing. The most efficient solution lies in allowing the system to concurrently execute all algorithm-dataset-fold combinations in parallel.
 
 ## Setting up algorithm and dataset dictionaries:
 
@@ -337,8 +337,8 @@ plt.show()
 
 ## Conclusion
 
-On my Thinkpad P14s with 8 cores and 16 threads, parallel execution speeds up sequential execution by a factor of around 2.5; machines with a greater number of CPU cores will achieve an even higher speedup.
+This post describes one way of leveraging multiprocessing to speed up machine learning experiments. I like about this method that it creates a clear structure in the script: 1) set up the experiment, 2) run the experiment using multiprocessing, 3) obtain the result once every execution has finished. I found this to improve the maintainability and readability of my code. You can check out this [gist](https://gist.github.com/heymarco/0dea6fc8121b8639d8702687a97a8c54) for a minimal working example of what I have shown in this post.
 
-Also check out this [gist](https://gist.github.com/heymarco/0dea6fc8121b8639d8702687a97a8c54) for a minimal working example of what I have shown in this post.
+On my Thinkpad P14s with 8 cores and 16 threads, parallel execution speeds up sequential execution by a factor of around 2.5; machines with a greater number of CPU cores will achieve an even higher speedup.
 
 In my upcoming post, I will describe how I log my scientific experiments. Stay tuned!
