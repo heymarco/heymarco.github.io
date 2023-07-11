@@ -1,19 +1,63 @@
 ---
 layout: single
-title:  "Draft Post"
-header:
-  teaser: "unsplash-gallery-image-2-th.jpg"
+title:  "Asynchronous execution of python function with ordered result"
+#header:
+#  teaser: "unsplash-gallery-image-2-th.jpg"
 categories: 
-  - Jekyll
+  - python
 tags:
-  - edge case
+  - multiprocessing
 ---
-Monocle ipsum dolor sit amet handsome pariatur aliqua, hub remarkable irure commodo classic deserunt bespoke. Sunt commodo signature, Swiss minim flat white Tsutaya excepteur artisanal et Nordic laborum joy ANA. Beams mollit exquisite Ginza efficient dolore qui Comme des Garçons Winkreative Lufthansa bulletin global. Iconic sed liveable duis. Mollit dolore eu laboris Comme des Garçons hub pintxos sed eiusmod tote bag Shinkansen nisi consectetur pariatur. Nordic international quis finest Baggu dolore, bureaux hub hand-crafted ut joy sint Airbus A380.
 
-Conversation handsome hub cosy, enim emerging sed K-pop velit Gaggenau charming proident et boulevard ryokan. Remarkable airport deserunt international est, nulla minim magna emerging discerning in exclusive dolor. Commodo dolore deserunt cosy, global Nordic culpa uniforms signature charming. Smart ryokan commodo, eiusmod global occaecat incididunt aliqua Beams. Boulevard conversation excepteur finest Swiss non veniam Comme des Garçons essential artisanal. Destination Scandinavian international, anim Boeing 787 in duis Baggu irure essential.
+Evaluating machine learning algorithms typically requires
+1. comparing ones own algorithm to the state of the art. 
+2. repeating an experiment multiple times to obtain statistically significant results.
 
-Fugiat exclusive laborum, Gaggenau ad Winkreative sharp elit labore. Remarkable officia ryokan Boeing 787, consectetur boutique Nordic Singapore espresso elit iconic perfect izakaya soft power excepteur. Ut veniam carefully curated K-pop dolore, uniforms in voluptate. Craftsmanship Ettinger Lufthansa sophisticated esse boutique veniam exquisite. Aute cillum bespoke, intricate consectetur in exquisite international lovely bulletin irure Washlet Gaggenau deserunt. Efficient eu quality of life wardrobe labore, dolor emerging airport concierge reprehenderit izakaya dolore liveable Baggu.
+To setup such an experiment, one could write a function `evaluate_algorithm(alg, train_data, test_data) -> float` that takes an algorithm instance `alg`, trains on `train_data`, evaluates on `test_data` and then returns the achieved accuracy. 
 
-Commodo elegant essential consectetur Gaggenau culpa consequat id sophisticated St Moritz sunt conversation duis non velit. Nulla business class non ut Marylebone ANA soft power fugiat carefully curated. Bureaux sed punctual handsome Washlet impeccable hand-crafted aute extraordinary tote bag enim boulevard soft power sleepy. Dolore conversation irure Zürich the best adipisicing, vibrant finest hub anim premium aliqua. Cupidatat smart international, bureaux Baggu id efficient punctual. Tempor nulla flat white enim, K-pop incididunt elit efficient Toto uniforms concierge discerning. Concierge sleepy extraordinary, deserunt Melbourne commodo Nordic Winkreative Washlet Ginza exercitation espresso.
+One could then loop over all algorithms, data sets, and experiment repetitions and sequentially call `evaluate_algorithm`:
+```python
+algs = {"alg1": alg1, "alg2": alg2, "alg3": alg3}
+datasets = {"ds1": (train1, test1), 
+            "ds2": (train2, test2), 
+            "ds3": (train3, test3)}
 
-Tsutaya sed in business class sharp. Do Beams in adipisicing Lufthansa. Business class occaecat Melbourne, irure Singapore commodo espresso carefully curated quis quality of life adipisicing. Impeccable laborum efficient classic proident in. Beams Helsinki ullamco Marylebone dolore sophisticated concierge Muji anim duis joy ut. Comme des Garçons aute Muji in aliquip ryokan soft power Nordic essential ANA culpa elegant.
+
+result = []
+for alg_name, alg in algs.items():
+    for ds_name, (train, test) in datasets.items():
+        for rep in repetitions:
+            accuracy = evaluate_algorithm(alg, train, test)
+            result.append([alg_name, rep, ds_name, accuracy])
+```
+Note that `result` can be easily converted to a pandas DataFrame. 
+Needless to say, this approach becomes very time-consuming very fast! 
+So, let's try to get rid of the nested loops by using multiprocessing.
+
+```python
+from multiprocessing import Pool
+from time import sleep
+
+
+def _wait(i):
+    sleep(i)
+    return i
+
+
+def run_async(function, args_list, njobs, sleep_time_s = 0.1):
+    pool = Pool(njobs)
+    results = {i: pool.apply_async(function, args=args)
+               for i, args in enumerate(args_list)}
+    while not all(future.ready() for future in results.values()):
+        sleep(sleep_time_s)
+    results = [results[i].get() for i in range(len(results))]
+    pool.close()
+    return results
+  
+  
+if __name__ == '__main__':
+    njobs = 3
+    delay = [[i] for i in range(3)]
+    result = run_async(_wait, delay, njobs)
+    print(result)
+```
