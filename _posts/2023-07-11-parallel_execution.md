@@ -295,7 +295,7 @@ plt.show()
 
 
     
-![png](parallel_execution_files/parallel_execution_17_0.png)
+![png](/assets/post_assets/parallel_execution_files/parallel_execution_17_0.png)
     
 
 
