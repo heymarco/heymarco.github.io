@@ -331,7 +331,7 @@ plt.show()
 
 
     
-![png](/assets/parallel_execution_files/parallel_execution_19_0.png)
+![png](/assets/post_assets/parallel_execution_files/parallel_execution_19_0.png)
     
 
 
