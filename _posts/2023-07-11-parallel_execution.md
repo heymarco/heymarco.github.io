@@ -10,8 +10,8 @@ tags:
 
 In this blog post, I want to show my approach to parallelize scientific experiments using Python multiprocessing. While there may be other (better) methods to do this, the procedure described here has proven to be effective for me. We will evaluate Decision Trees and Random Forests on the Arrhythmia and Wisconsin Breast Cancer datasets.
 
-In a nutshell, evaluating machine learning algorithms typically requires
-1. comparing ones own algorithm to the state of the art.
+In a nutshell, evaluating machine learning algorithms typically requires:
+1. comparing ones own algorithm to the state of the art;
 2. repeating an experiment multiple times to obtain reliable results.
 
 The most inefficient way to do this is to loop over all algorithms, data sets, and experiment repetitions or folds. A more efficient method is to parallelize one of the loops. However, this still leaves us with a substantial amount of sequential processing. The most efficient solution lies in eliminating these loops entirely and allowing the system to concurrently execute all algorithm-dataset-fold combinations in parallel.
