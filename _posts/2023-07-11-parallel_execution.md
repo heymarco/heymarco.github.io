@@ -157,7 +157,7 @@ pd.concat([mean_df, std_df], axis=1)
 
 Needless to say, this sequential approach is very slow! So let's get rid of the nested loops and use multiprocessing instead.
 
-### Parallel execution
+## Parallel execution
 
 Let's define an `evaluate_alg` function that evaluates an algorithm `alg` on a single fold (basically, it wraps lines 8-11 in the code above). Later on, we execute multiple calls of this function in parallel.:
 
