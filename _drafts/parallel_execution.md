@@ -15,7 +15,6 @@ To begin, we need to set up two dictionaries that contain the algorithms and dat
 
 ```python
 import copy
-
 import pandas as pd
 from sklearn.model_selection import KFold
 from sklearn.tree import DecisionTreeClassifier
@@ -32,6 +31,7 @@ def load_dataset_with_id(id):
 
 algs = {"Decision Tree": DecisionTreeClassifier(random_state=0),
         "Random Forest": RandomForestClassifier(random_state=0)}
+
 datasets = {
     "Arrhythmia": load_dataset_with_id(5),
     "Wisconsin Breast Cancer": load_dataset_with_id(1510),
@@ -46,17 +46,19 @@ ALGORITHM = "Algorithm"
 DATASET = "Dataset"
 FOLD = "Fold"
 ACCURACY = "Accuracy"
+STD = "Standard deviation"
 
 dataframe_columns = [ALGORITHM, DATASET, FOLD, ACCURACY]
 ```
 
 ## Sequential execution
 
-The following code loops over all algorithms in the `algs` dictionary, over all datasets in the `datasets` dictionary, and performs 100-fold cross validation. We then store the outcome `[alg_name, datasets_name, fold, accuracy]` in the result list. Afterwards, we convert `result` to a dataframe.
+The following code loops over all algorithms in the `algs` dictionary, over all datasets in the `datasets` dictionary, and performs 10-fold cross validation. We then store the outcome `[alg_name, datasets_name, fold, accuracy]` in the result list. Afterwards, we convert `result` to a dataframe.
 
 
 ```python
-n_folds = 100
+%%time
+n_folds = 10
 result = []
 for alg_name, alg_blueprint in algs.items():
     alg = copy.deepcopy(alg_blueprint)
@@ -68,9 +70,18 @@ for alg_name, alg_blueprint in algs.items():
             alg.fit(X_train, y_train)
             accuracy = alg.score(X_test, y_test)
             result.append([alg_name, datasets_name, fold, accuracy])
+```
 
+    CPU times: user 4 s, sys: 46.9 ms, total: 4.05 s
+    Wall time: 4.03 s
+
+
+
+```python
 result = pd.DataFrame(result, columns=dataframe_columns)
-result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
+mean_df = result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
+std_df = result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).std().round(2).rename({ACCURACY: STD}, axis=1)
+pd.concat([mean_df, std_df], axis=1)
 ```
 
 
@@ -96,10 +107,12 @@ result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
       <th></th>
       <th></th>
       <th>Accuracy</th>
+      <th>Standard deviation</th>
     </tr>
     <tr>
       <th>Dataset</th>
       <th>Algorithm</th>
+      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -107,20 +120,24 @@ result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
     <tr>
       <th rowspan="2" valign="top">Arrhythmia</th>
       <th>Decision Tree</th>
-      <td>0.56</td>
+      <td>0.57</td>
+      <td>0.08</td>
     </tr>
     <tr>
       <th>Random Forest</th>
-      <td>0.72</td>
+      <td>0.71</td>
+      <td>0.07</td>
     </tr>
     <tr>
       <th rowspan="2" valign="top">Wisconsin Breast Cancer</th>
       <th>Decision Tree</th>
       <td>0.92</td>
+      <td>0.04</td>
     </tr>
     <tr>
       <th>Random Forest</th>
       <td>0.96</td>
+      <td>0.04</td>
     </tr>
   </tbody>
 </table>
@@ -186,11 +203,10 @@ from multiprocessing import Pool
 
 def run_async(function, args_list, njobs, sleep_time_s = 0.01):
     pool = Pool(njobs)
-    results = {i: pool.apply_async(function, args=args)
-               for i, args in enumerate(args_list)}
-    while not all(future.ready() for future in results.values()):
+    results = [pool.apply_async(function, args=args) for args in args_list]
+    while not all(future.ready() for future in results):
         sleep(sleep_time_s)
-    results = [results[i].get() for i in range(len(results))]
+    results = [result.get() for result in results]
     pool.close()
     return results
 ```
@@ -200,19 +216,31 @@ Finally, let us run our experiment in parallel by passing the function `evaluate
 
 ```python
 from multiprocessing import cpu_count
-
 njobs = cpu_count()
-accuracies = run_async(evaluate_alg, arguments_list, njobs=njobs)
 ```
+
+
+```python
+%%time
+
+accuracies = run_async(evaluate_alg, arguments_list, njobs=njobs)
+
+for config, accuracy in zip(config_list, accuracies):
+    config.append(accuracy)
+```
+
+    CPU times: user 109 ms, sys: 422 ms, total: 531 ms
+    Wall time: 1.64 s
+
 
 We can now join the `accuracies` with the previously created `config_list` and create our final dataframe:
 
 
 ```python
-for config, accuracy in zip(config_list, accuracies):
-    config.append(accuracy)
 result = pd.DataFrame(config_list, columns=dataframe_columns)
-result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
+mean_df = result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
+std_df = result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).std().round(2).rename({ACCURACY: STD}, axis=1)
+pd.concat([mean_df, std_df], axis=1)
 ```
 
 
@@ -238,10 +266,12 @@ result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
       <th></th>
       <th></th>
       <th>Accuracy</th>
+      <th>Standard deviation</th>
     </tr>
     <tr>
       <th>Dataset</th>
       <th>Algorithm</th>
+      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -249,20 +279,24 @@ result.drop(FOLD, axis=1).groupby([DATASET, ALGORITHM]).mean().round(2)
     <tr>
       <th rowspan="2" valign="top">Arrhythmia</th>
       <th>Decision Tree</th>
-      <td>0.56</td>
+      <td>0.57</td>
+      <td>0.08</td>
     </tr>
     <tr>
       <th>Random Forest</th>
-      <td>0.72</td>
+      <td>0.71</td>
+      <td>0.07</td>
     </tr>
     <tr>
       <th rowspan="2" valign="top">Wisconsin Breast Cancer</th>
       <th>Decision Tree</th>
       <td>0.92</td>
+      <td>0.04</td>
     </tr>
     <tr>
       <th>Random Forest</th>
       <td>0.96</td>
+      <td>0.04</td>
     </tr>
   </tbody>
 </table>
@@ -280,20 +314,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 sns.set()
 
-sns.barplot(data=result, x=DATASET, y=ACCURACY, hue=ALGORITHM)
+sns.barplot(data=result, x=DATASET, y=ACCURACY, hue=ALGORITHM, errorbar="sd")
 plt.gcf().set_size_inches((5, 3))
 plt.show()
 ```
 
 
     
-![png](parallel_execution_files/parallel_execution_17_0.png)
+![png](../assets/post_assets/parallel_execution_files/parallel_execution_19_0.png)
     
 
 
 ## Conclusion
 
-On my Thinkpad P14s with 8 cores and 16 threads, parallel execution speeds up sequential execution by a factor of around 4; machines with a greater number of CPU cores will achieve an even higher speedup.
+On my Thinkpad P14s with 8 cores and 16 threads, parallel execution speeds up sequential execution by a factor of around 2.5; machines with a greater number of CPU cores will achieve an even higher speedup.
 
 Also check out this [gist](https://gist.github.com/heymarco/0dea6fc8121b8639d8702687a97a8c54) for a minimal working example of what I have shown in this post.
 
