@@ -8,8 +8,6 @@ tags:
   - multiprocessing
 ---
 
-# Parallelizing scientific experiments
-
 In this blog post, I want to show my approach to parallelize scientific experiments using Python multiprocessing. While there may be other (better) methods to do this, the procedure described here has proven to be effective for me. We will evaluate Decision Trees and Random Forests on the Arrhythmia and Wisconsin Breast Cancer datasets.
 
 In a nutshell, evaluating machine learning algorithms typically requires
