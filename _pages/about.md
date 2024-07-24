@@ -22,4 +22,4 @@ Please don't hesitate to reach out to me at any time if you're interested in dis
 
 **(17.05.2024)** Our paper "Budgeted Multi-Armed Bandits with Asymmetric Confidence Intervals" has been accepted at KDD '24, in Barcelona. Congratulations to my co-authors Vadim Arzamasov, Edouard Fouché, and Klemens Böhm. Read the paper [here](/files/Budgeted_Bandits_with_Asymmetric_Confidence_Intervals__KDD_24.pdf).
 
-**(10.01.2024)** Our paper on change detection in high-dimensional data streams has just been published with SpringerNature in Data Mining and Knowledge Discovery. Congratulations to my co-authors Edouard Fouché, Vadim Arzamasov, Tanja Fenn, Florian Kalinke and Klemens Böhm. Access the paper here: [https://rdcu.be/dvAOc](https://rdcu.be/dvAOc)
+**(10.01.2024)** Our paper on change detection in high-dimensional data streams has just been published with SpringerNature in Data Mining and Knowledge Discovery. Congratulations to my co-authors Edouard Fouché, Vadim Arzamasov, Tanja Fenn, Florian Kalinke and Klemens Böhm. Access the paper [here](https://rdcu.be/dvAOc).
