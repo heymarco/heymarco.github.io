@@ -18,6 +18,8 @@ Please don't hesitate to reach out to me at any time if you're interested in dis
 
 ## News
 
+**(24.07.2024)** Our paper "MicroPPO: Safe Power Flow Management in Decentralized Micro-grid with Proximal Policy Optimization" has been accepted at DSAA 2024 in San Diego. Congratulations to Daniel Ebi, who was the main driver behind this project, and to our other co-authors Edouard Fouché and Klemens Böhm. The paper is still to be published, so stay tuned!
+
 **(27.05.2024)** Our paper "Leveraging Plasticity in Incremental Decision Trees" has been accepted at ECML PKDD '24 in Vilnius. This work was done during my research stay at the Victoria University of Wellington where I visited [Heitor Murilo Gomes](https://heitorgomes.com/). Congratulations to all my co-authors Heitor Murilo Gomes, Edouard Fouché, Bernhard Pfahringer, and Klemens Böhm. I will provide a link to the paper as soon as it is published.
 
 **(17.05.2024)** Our paper "Budgeted Multi-Armed Bandits with Asymmetric Confidence Intervals" has been accepted at KDD '24, in Barcelona. Congratulations to my co-authors Vadim Arzamasov, Edouard Fouché, and Klemens Böhm. Read the paper [here](/files/Budgeted_Bandits_with_Asymmetric_Confidence_Intervals__KDD_24.pdf).
