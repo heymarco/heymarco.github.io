@@ -18,6 +18,8 @@ Please don't hesitate to reach out to me at any time if you're interested in dis
 
 ## News
 
+**(17.02.2025)** I have successfully defended my dissertation "Decision making in data streams under limited feedback". You can find the presentation slides  [here](/talks/2025-02-12-phd-defense). I will post a link to the published version of the dissertation once available.
+
 **(24.07.2024)** Our paper "MicroPPO: Safe Power Flow Management in Decentralized Micro-grid with Proximal Policy Optimization" has been accepted at DSAA 2024 in San Diego. Congratulations to Daniel Ebi, who was the main driver behind this project, and to our other co-authors Edouard Fouché and Klemens Böhm. Read the paper [here](files/MicroPPO_Ebi_Fouche_Heyden_Boehm_DSAA24_AV.pdf).
 
 **(27.05.2024)** Our paper "Leveraging Plasticity in Incremental Decision Trees" has been accepted at ECML PKDD '24 in Vilnius. This work was done during my research stay at the Victoria University of Wellington where I visited [Heitor Murilo Gomes](https://heitorgomes.com/). Congratulations to all my co-authors Heitor Murilo Gomes, Edouard Fouché, Bernhard Pfahringer, and Klemens Böhm. Access the paper [here](https://link.springer.com/chapter/10.1007/978-3-031-70362-1_3).
